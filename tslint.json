@@ -1,6 +1,57 @@
 {
-  "extends": [],
+  "extends": [
+    "tslint:latest",
+    "tslint-react",
+    "tslint-config-airbnb",
+    "tslint-config-prettier"
+  ],
   "defaultSeverity": "warning",
+  "rules": {
+    "align": [true, "parameters", "statements"],
+    "eofline": false,
+    "indent": [true, "spaces"],
+    "interface-name": [true, "never-prefix"],
+    "jsx-no-lambda": false,
+    "jsx-no-multiline-js": false,
+    "no-any": true,
+    "no-console": true,
+    "no-debugger": true,
+    "no-null-keyword": false,
+    "no-switch-case-fall-through": true,
+    "no-use-before-declare": true,
+    "one-line": [
+      true,
+      "check-catch",
+      "check-else",
+      "check-open-brace",
+      "check-whitespace"
+    ],
+    "quotemark": [true, "single", "jsx-double"],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "switch-default": true,
+    "trailing-comma": [false],
+    "typedef": [true, "parameter", "property-declaration"],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      }
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ],
+    "no-implicit-dependencies": false,
+    "no-submodule-imports": [true],
+    "object-literal-sort-keys": false
+  },
   "linterOptions": {
     "exclude": [
       "config/**/*.js",
