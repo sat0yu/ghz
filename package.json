@@ -115,7 +115,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "/Users/yusuke_sato/.ghq/github.com/sat0yu/ghz/tsconfig.test.json"
+        "tsConfigFile": "tsconfig.test.json"
       }
     }
   },
