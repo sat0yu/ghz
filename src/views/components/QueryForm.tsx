@@ -7,8 +7,10 @@ interface Props {
   onSubmit: (query: string) => void;
 }
 
+const defaultQuery = 'is:issue is:open';
+
 const QueryForm: React.FC<Props> = props => {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState(defaultQuery);
   return (
     <form noValidate={true} autoComplete="off">
       <TextField
