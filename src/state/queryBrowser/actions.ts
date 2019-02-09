@@ -1,4 +1,5 @@
 import { bindThunkAction } from 'typescript-fsa-redux-thunk';
+import GithubApi from '../../helpers/GithubApi';
 import types from './types';
 
 export const postQueryRequest = bindThunkAction(
@@ -6,7 +7,9 @@ export const postQueryRequest = bindThunkAction(
   async ({ query }, _dispatch) => {
     // tslint:disable-next-line:no-console
     console.log(query);
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    const res = await GithubApi.call(query);
+    // tslint:disable-next-line:no-console
+    console.log(res);
     return { query };
   },
 );

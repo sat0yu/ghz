@@ -40,8 +40,13 @@ class CardBrowser extends React.Component<Props, State> {
       <div>
         <p>{this.props.isPostingQuery ? 'true' : 'false'}</p>
         <QueryForm onSubmit={this.registerQuery} />
-        {this.state.queries.map(q => (
-          <p onClick={() => this.props.postQueryRequest({ query: q })}>{q}</p>
+        {this.state.queries.map((q, index) => (
+          <p
+            key={index}
+            onClick={() => this.props.postQueryRequest({ query: q })}
+          >
+            {q}
+          </p>
         ))}
       </div>
     );
