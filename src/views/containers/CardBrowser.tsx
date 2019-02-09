@@ -1,14 +1,24 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { queryBrowserOperations } from '../../state/queryBrowser';
 import QueryForm from '../components/QueryForm';
 
-// tslint:disable-next-line:no-empty-interface
-interface Props {}
+type Props = ReturnType<typeof mapDispatchToProps>;
 
 interface State {
   queries: string[];
 }
 
-export default class CardBrowser extends React.Component<Props, State> {
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      postQueryRequest: queryBrowserOperations.postQueryRequest,
+    },
+    dispatch,
+  );
+
+class CardBrowser extends React.Component<Props, State> {
   public constructor(props: Props) {
     super(props);
     this.state = { queries: [] };
@@ -20,7 +30,9 @@ export default class CardBrowser extends React.Component<Props, State> {
       <div>
         <QueryForm onSubmit={this.registerQuery} />
         {this.state.queries.map(q => (
-          <p>{q}</p>
+          <p onClick={() => this.props.postQueryRequest({ query: q }) && true}>
+            {q}
+          </p>
         ))}
       </div>
     );
@@ -30,3 +42,8 @@ export default class CardBrowser extends React.Component<Props, State> {
     this.setState({ queries: [...this.state.queries, query] });
   }
 }
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(CardBrowser);
