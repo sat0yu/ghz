@@ -1,14 +1,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { queryBrowserOperations } from '../../state/queryBrowser';
+import {
+  queryBrowserOperations,
+  queryBrowserSelectors,
+} from '../../state/queryBrowser';
+import { RootState } from '../../state/store';
 import QueryForm from '../components/QueryForm';
 
-type Props = ReturnType<typeof mapDispatchToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+type StateProps = ReturnType<typeof mapStateToProps>;
+type Props = StateProps & DispatchProps;
 
 interface State {
   queries: string[];
 }
+
+const mapStateToProps = (store: RootState) => ({
+  isPostingQuery: queryBrowserSelectors.getIsPostingQuery(store),
+});
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
@@ -28,11 +38,10 @@ class CardBrowser extends React.Component<Props, State> {
   public render() {
     return (
       <div>
+        <p>{this.props.isPostingQuery ? 'true' : 'false'}</p>
         <QueryForm onSubmit={this.registerQuery} />
         {this.state.queries.map(q => (
-          <p onClick={() => this.props.postQueryRequest({ query: q }) && true}>
-            {q}
-          </p>
+          <p onClick={() => this.props.postQueryRequest({ query: q })}>{q}</p>
         ))}
       </div>
     );
@@ -44,6 +53,6 @@ class CardBrowser extends React.Component<Props, State> {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(CardBrowser);

@@ -8,7 +8,9 @@ const rootReducer = combineReducers({
   queryBrowser,
 });
 
-const initialState: ReturnType<typeof rootReducer> = {
+export type RootState = ReturnType<typeof rootReducer>;
+
+const initialState: RootState = {
   queryBrowser: queryBrowserState,
 };
 

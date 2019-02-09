@@ -14,7 +14,7 @@ export const reducers = reducerWithInitialState<State>(initialState)
     ...state,
     isPostingQuery: true,
   }))
-  .cases([types.postQuery.failed, types.postQuery.failed], state => ({
+  .cases([types.postQuery.failed, types.postQuery.done], state => ({
     ...state,
     isPostingQuery: false,
   }));

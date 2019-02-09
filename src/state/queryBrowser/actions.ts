@@ -6,6 +6,7 @@ export const postQueryRequest = bindThunkAction(
   async ({ query }, _dispatch) => {
     // tslint:disable-next-line:no-console
     console.log(query);
+    await new Promise(resolve => setTimeout(resolve, 3000));
     return { query };
   },
 );
