@@ -19,7 +19,7 @@
     "fork-ts-checker-webpack-plugin": "^0.2.8",
     "fs-extra": "7.0.1",
     "html-webpack-plugin": "2.29.0",
-    "jest": "20.0.4",
+    "jest": "24.1.0",
     "js-cookie": "^2.2.0",
     "lodash-es": "^4.17.11",
     "object-assign": "4.1.1",
