@@ -49,7 +49,7 @@
       "allow-pascal-case"
     ],
     "no-implicit-dependencies": false,
-    "no-submodule-imports": [true],
+    "no-submodule-imports": [true, "@material-ui/core", "@material-ui/icons"],
     "object-literal-sort-keys": false
   },
   "linterOptions": {
