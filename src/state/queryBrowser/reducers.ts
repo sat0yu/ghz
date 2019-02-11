@@ -1,10 +1,11 @@
 import { omit } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import { Card } from '../../interfaces/card';
 import { discardQuery, postQuery } from './actions';
 
 export interface SearchQuery {
   query: string;
-  result: string;
+  result: Card[];
   isFeatching: boolean;
 }
 
@@ -28,6 +29,7 @@ export const reducers = reducerWithInitialState<State>(initialState)
       [payload.query]: {
         ...(state.searchQueryMap[payload.query] || {}),
         isFeatching: true,
+        result: [],
       },
     },
   }))
@@ -48,7 +50,7 @@ export const reducers = reducerWithInitialState<State>(initialState)
       [payload.params.query]: {
         ...(state.searchQueryMap[payload.params.query] || {}),
         isFeatching: false,
-        result: payload.result.json,
+        result: payload.result.cards,
       },
     },
   }))
