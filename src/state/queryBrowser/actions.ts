@@ -42,4 +42,12 @@ const postQueryRequest = bindThunkAction(
   },
 );
 
-export default { postQueryRequest };
+interface DiscardQueryParams {
+  query: string;
+}
+
+export const discardQuery = actionCreator<DiscardQueryParams>(
+  types.DIDCARD_QUERY,
+);
+
+export default { postQueryRequest, discardQuery };

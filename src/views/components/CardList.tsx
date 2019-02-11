@@ -1,11 +1,6 @@
 import { Button } from '@material-ui/core';
 import * as React from 'react';
-
-interface SearchQuery {
-  query: string;
-  result: string;
-  isFeatching: boolean;
-}
+import { SearchQuery } from '../../state/queryBrowser/reducers';
 
 interface Props {
   searchQuery: SearchQuery;

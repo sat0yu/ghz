@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { queryBrowserOperations } from '../../state/queryBrowser';
 
-const defaultQuery = 'is:issue is:open';
-
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type Props = DispatchProps;
 
@@ -24,8 +22,11 @@ interface State {
 }
 
 class QueryForm extends React.Component<Props, State> {
+  private static defaultQuery = 'is:issue is:open';
+
   public constructor(props: Props) {
     super(props);
+    this.state = { value: QueryForm.defaultQuery };
     this.handleClickSearchButton = this.handleClickSearchButton.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
   }
@@ -34,7 +35,7 @@ class QueryForm extends React.Component<Props, State> {
     return (
       <form noValidate={true} autoComplete="off">
         <TextField
-          placeholder={defaultQuery}
+          placeholder={QueryForm.defaultQuery}
           label="Query"
           value={this.state.value}
           onChange={this.handleOnChange}
