@@ -17,7 +17,7 @@ interface PostQueryResult {
 export const postQuery = actionCreator.async<
   PostQueryParams,
   PostQueryResult,
-  Error
+  GithubApiError
 >(types.POST_QUERY);
 
 const postQueryRequest = bindThunkAction(
@@ -61,6 +61,9 @@ const postQueryRequest = bindThunkAction(
     `;
     const res = await GithubApi.call(gql);
     const json = await res.json();
+    if (json.errors) {
+      throw new GithubApiError(json.errors);
+    }
     const cards = json.data.search.edges.map(
       (edge: { node: Card }) => edge.node,
     );
