@@ -14,6 +14,7 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 interface OwnProps {
   query: string;
+  onDestroy: () => void;
 }
 
 const mapStateToProps = (store: RootState) => ({
@@ -39,7 +40,10 @@ class CardList extends React.Component<Props> {
     return (
       <div>
         <Button onClick={this.fetchCards}>
-          <p>button</p>
+          <p>search</p>
+        </Button>
+        <Button onClick={this.props.onDestroy}>
+          <p>discard</p>
         </Button>
         <p>{`${this.props.query}: ${
           this.props.isPostingQuery ? 'loading' : 'done'
