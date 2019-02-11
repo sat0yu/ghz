@@ -3,11 +3,11 @@ import { RootState } from '../store';
 
 const getQueryBrowserFromStore = (store: RootState) => store.queryBrowser;
 
-const getIsPostingQuery = createSelector(
+const getSearchQueryMap = createSelector(
   getQueryBrowserFromStore,
-  queryBrowser => queryBrowser.isPostingQuery,
+  queryBrowser => queryBrowser.searchQueryMap,
 );
 
 export default {
-  getIsPostingQuery,
+  getSearchQueryMap,
 };

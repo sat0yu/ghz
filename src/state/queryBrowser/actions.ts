@@ -9,7 +9,7 @@ interface PostQueryParams {
   query: string;
 }
 interface PostQueryPayload {
-  query: string;
+  json: string;
 }
 
 export const postQuery = actionCreator.async<
@@ -21,13 +21,33 @@ export const postQuery = actionCreator.async<
 const postQueryRequest = bindThunkAction(
   postQuery,
   async ({ query }, _dispatch) => {
-    // tslint:disable-next-line:no-console
-    console.log(query);
-    const res = await GithubApi.call(query);
-    // tslint:disable-next-line:no-console
-    console.log(res);
-    return { query };
+    const gql = `query {
+      search(query: "${query}", first: 100, type: ISSUE){
+        edges {
+          cursor
+          node {
+            ...on Issue {
+              url
+            }
+            ... on PullRequest {
+              url
+            }
+          }
+        }
+      }
+    }`;
+    const res = await GithubApi.call(gql);
+    const json = await res.json();
+    return { json: JSON.stringify(json) };
   },
 );
 
-export default { postQueryRequest };
+interface DiscardQueryParams {
+  query: string;
+}
+
+export const discardQuery = actionCreator<DiscardQueryParams>(
+  types.DIDCARD_QUERY,
+);
+
+export default { postQueryRequest, discardQuery };

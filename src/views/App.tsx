@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { configureStore } from '../state/store';
-import ConfigurationForm from './components/ConfigurationForm';
-import CardBrowser from './containers/CardBrowser';
+import CardBrowser from './components/CardBrowser';
+import ConfigurationForm from './containers/ConfigurationForm';
 
 import logoSvg from '../assets/logo.svg';
 import './App.css';
