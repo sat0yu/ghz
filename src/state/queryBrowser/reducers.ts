@@ -3,10 +3,12 @@ import { postQuery } from './actions';
 
 interface State {
   isPostingQuery: boolean;
+  cards: string;
 }
 
 export const initialState = {
   isPostingQuery: false,
+  cards: '',
 };
 
 export const reducers = reducerWithInitialState<State>(initialState)
@@ -14,7 +16,12 @@ export const reducers = reducerWithInitialState<State>(initialState)
     ...state,
     isPostingQuery: true,
   }))
-  .cases([postQuery.failed, postQuery.done], state => ({
+  .case(postQuery.failed, state => ({
     ...state,
+    isPostingQuery: false,
+  }))
+  .case(postQuery.done, (state, payload) => ({
+    ...state,
+    cards: payload.result.json,
     isPostingQuery: false,
   }));

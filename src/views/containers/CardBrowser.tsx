@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import {
-  queryBrowserOperations,
-  queryBrowserSelectors,
-} from '../../state/queryBrowser';
+import { queryBrowserSelectors } from '../../state/queryBrowser';
 import { RootState } from '../../state/store';
 import QueryForm from '../components/QueryForm';
+import CardList from './CardList';
 
-type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type StateProps = ReturnType<typeof mapStateToProps>;
-type Props = StateProps & DispatchProps;
+type Props = StateProps;
 
 interface State {
   queries: string[];
@@ -19,14 +15,6 @@ interface State {
 const mapStateToProps = (store: RootState) => ({
   isPostingQuery: queryBrowserSelectors.getIsPostingQuery(store),
 });
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      postQueryRequest: queryBrowserOperations.postQueryRequest,
-    },
-    dispatch,
-  );
 
 class CardBrowser extends React.Component<Props, State> {
   public constructor(props: Props) {
@@ -41,12 +29,7 @@ class CardBrowser extends React.Component<Props, State> {
         <p>{this.props.isPostingQuery ? 'true' : 'false'}</p>
         <QueryForm onSubmit={this.registerQuery} />
         {this.state.queries.map((q, index) => (
-          <p
-            key={index}
-            onClick={() => this.props.postQueryRequest({ query: q })}
-          >
-            {q}
-          </p>
+          <CardList key={index} query={q} />
         ))}
       </div>
     );
@@ -57,7 +40,4 @@ class CardBrowser extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CardBrowser);
+export default connect(mapStateToProps)(CardBrowser);

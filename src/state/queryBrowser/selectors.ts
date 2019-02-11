@@ -8,6 +8,12 @@ const getIsPostingQuery = createSelector(
   queryBrowser => queryBrowser.isPostingQuery,
 );
 
+const getCards = createSelector(
+  getQueryBrowserFromStore,
+  queryBrowser => queryBrowser.cards,
+);
+
 export default {
   getIsPostingQuery,
+  getCards,
 };
