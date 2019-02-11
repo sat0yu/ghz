@@ -23,9 +23,10 @@ export const postQuery = actionCreator.async<
 const postQueryRequest = bindThunkAction(
   postQuery,
   async ({ query }, _dispatch) => {
+    const safeQuery = query.replace(/"/g, '\\"');
     const gql = `
       query {
-        search(query: "${query}", first: 100, type: ISSUE){
+        search(query: "${safeQuery}", first: 100, type: ISSUE){
           edges {
             node {
               ...on Issue {
