@@ -1,10 +1,10 @@
 import { Button } from '@material-ui/core';
 import * as React from 'react';
-import { SearchQuery } from '../../state/queryBrowser/reducers';
+import { Feed } from '../../interfaces/card';
 import Card from './Card';
 
 interface Props {
-  searchQuery: SearchQuery;
+  feed: Feed;
   handleReload: () => void;
   handleDiscard: () => void;
 }
@@ -17,11 +17,11 @@ const CardList: React.FC<Props> = props => (
     <Button onClick={props.handleDiscard}>
       <p>discard</p>
     </Button>
-    <p>{`${props.searchQuery.query}: ${
-      props.searchQuery.isFeatching ? 'loading' : 'done'
+    <p>{`${props.feed.query}: ${
+      props.feed.isFeatching ? 'loading' : 'done'
     }`}</p>
     <ul>
-      {props.searchQuery.result.map(card => (
+      {props.feed.cards.map(card => (
         <Card key={card.id} card={card} />
       ))}
     </ul>

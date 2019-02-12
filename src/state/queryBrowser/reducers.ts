@@ -1,63 +1,43 @@
 import { omit } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { Card } from '../../interfaces/card';
-import { GithubApiError } from '../../interfaces/errors';
+import { ApiError, SearchResult } from '../../interfaces/GithubAPI';
 import { discardQuery, postQuery } from './actions';
 
 export interface SearchQuery {
   query: string;
-  result: Card[];
+  result?: SearchResult;
   isFeatching: boolean;
-  error: GithubApiError;
+  error: ApiError;
 }
 
-interface SearchQueryMap {
+interface QueryBrowserState {
   [query: string]: SearchQuery;
 }
 
-interface State {
-  searchQueryMap: SearchQueryMap;
-}
+export const initialState = {};
 
-export const initialState = {
-  searchQueryMap: {},
-};
-
-export const reducers = reducerWithInitialState<State>(initialState)
+export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
   .case(postQuery.started, (state, payload) => ({
     ...state,
-    searchQueryMap: {
-      ...state.searchQueryMap,
-      [payload.query]: {
-        ...(state.searchQueryMap[payload.query] || {}),
-        isFeatching: true,
-        result: [],
-      },
+    [payload.query]: {
+      ...(state[payload.query] || {}),
+      isFeatching: true,
     },
   }))
   .case(postQuery.failed, (state, payload) => ({
     ...state,
-    searchQueryMap: {
-      ...state.searchQueryMap,
-      [payload.params.query]: {
-        ...(state.searchQueryMap[payload.params.query] || {}),
-        isFeatching: false,
-        error: payload.error,
-      },
+    [payload.params.query]: {
+      ...(state[payload.params.query] || {}),
+      isFeatching: false,
+      error: payload.error,
     },
   }))
   .case(postQuery.done, (state, payload) => ({
     ...state,
-    searchQueryMap: {
-      ...state.searchQueryMap,
-      [payload.params.query]: {
-        ...(state.searchQueryMap[payload.params.query] || {}),
-        isFeatching: false,
-        result: payload.result.cards,
-      },
+    [payload.params.query]: {
+      ...(state[payload.params.query] || {}),
+      isFeatching: false,
+      result: payload.result,
     },
   }))
-  .case(discardQuery, (state, payload) => ({
-    ...state,
-    searchQueryMap: omit(state.searchQueryMap, payload.query),
-  }));
+  .case(discardQuery, (state, payload) => omit(state, payload.query));

@@ -1,8 +1,7 @@
 import { actionCreatorFactory } from 'typescript-fsa';
 import { bindThunkAction } from 'typescript-fsa-redux-thunk';
 import GithubApi from '../../helpers/GithubApi';
-import { Card } from '../../interfaces/card';
-import { GithubApiError } from '../../interfaces/errors';
+import { ApiError, SearchResult } from '../../interfaces/GithubAPI';
 import types from './types';
 
 const actionCreator = actionCreatorFactory();
@@ -10,14 +9,12 @@ const actionCreator = actionCreatorFactory();
 interface PostQueryParams {
   query: string;
 }
-interface PostQueryResult {
-  cards: Card[];
-}
+type PostQueryResult = SearchResult;
 
 export const postQuery = actionCreator.async<
   PostQueryParams,
   PostQueryResult,
-  GithubApiError
+  ApiError
 >(types.POST_QUERY);
 
 const postQueryRequest = bindThunkAction(
@@ -27,6 +24,12 @@ const postQueryRequest = bindThunkAction(
     const gql = `
       query {
         search(query: "${safeQuery}", first: 100, type: ISSUE){
+          pageInfo {
+            endCursor
+            hasNextPage
+            hasPreviousPage
+            startCursor
+          }
           edges {
             node {
               ...on Issue {
@@ -63,12 +66,9 @@ const postQueryRequest = bindThunkAction(
     const res = await GithubApi.call(gql);
     const json = await res.json();
     if (json.errors) {
-      throw new GithubApiError(json.errors);
+      throw new ApiError(json.errors);
     }
-    const cards = json.data.search.edges.map(
-      (edge: { node: Card }) => edge.node,
-    );
-    return { cards };
+    return json.data.search;
   },
 );
 

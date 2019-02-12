@@ -13,7 +13,7 @@ type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type Props = StateProps & DispatchProps;
 
 const mapStateToProps = (store: RootState) => ({
-  searchQueryMap: queryBrowserSelectors.getSearchQueryMap(store),
+  feedByQuery: queryBrowserSelectors.getFeedByQuery(store),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
@@ -27,15 +27,15 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 
 class CardBrowser extends React.Component<Props> {
   public render() {
-    const { searchQueryMap, postQueryRequest, discardQuery } = this.props;
-    return Object.keys(searchQueryMap).map(query => {
-      const searchQuery = searchQueryMap[query];
+    const { feedByQuery, postQueryRequest, discardQuery } = this.props;
+    return Object.keys(feedByQuery).map(query => {
+      const feed = feedByQuery[query];
       const handleReload = () => postQueryRequest({ query });
       const handleDiscard = () => discardQuery({ query });
       return (
         <CardList
           key={query}
-          searchQuery={searchQuery}
+          feed={feed}
           handleReload={handleReload}
           handleDiscard={handleDiscard}
         />
