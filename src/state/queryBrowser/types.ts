@@ -1,5 +1,5 @@
-const enum types {
+export const enum types {
   POST_QUERY = 'POST_QUERY',
+  LOAD_MORE_QUERY = 'LOAD_MORE_QUERY',
   DIDCARD_QUERY = 'DIDCARD_QUERY',
 }
-export default types;
