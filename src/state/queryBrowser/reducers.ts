@@ -1,7 +1,7 @@
 import { omit } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ApiError, SearchResult } from '../../interfaces/GithubAPI';
-import { discardQuery, postQuery } from './actions';
+import { discardQuery, search } from './actions';
 
 export interface SearchQuery {
   query: string;
@@ -17,14 +17,14 @@ interface QueryBrowserState {
 export const initialState = {};
 
 export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
-  .case(postQuery.started, (state, payload) => ({
+  .case(search.started, (state, payload) => ({
     ...state,
     [payload.query]: {
       ...(state[payload.query] || {}),
       isFeatching: true,
     },
   }))
-  .case(postQuery.failed, (state, payload) => ({
+  .case(search.failed, (state, payload) => ({
     ...state,
     [payload.params.query]: {
       ...(state[payload.params.query] || {}),
@@ -32,7 +32,7 @@ export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
       error: payload.error,
     },
   }))
-  .case(postQuery.done, (state, payload) => ({
+  .case(search.done, (state, payload) => ({
     ...state,
     [payload.params.query]: {
       ...(state[payload.params.query] || {}),

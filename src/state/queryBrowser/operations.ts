@@ -1,6 +1,6 @@
 import actions from './actions';
 
 export default {
-  postQueryRequest: actions.postQueryRequest,
+  searchRequest: actions.searchRequest,
   discardQuery: actions.discardQuery,
 };

@@ -19,7 +19,7 @@ const mapStateToProps = (store: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      postQueryRequest: queryBrowserOperations.postQueryRequest,
+      searchRequest: queryBrowserOperations.searchRequest,
       discardQuery: queryBrowserOperations.discardQuery,
     },
     dispatch,
@@ -27,10 +27,10 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 
 class CardBrowser extends React.Component<Props> {
   public render() {
-    const { feedByQuery, postQueryRequest, discardQuery } = this.props;
+    const { feedByQuery, searchRequest, discardQuery } = this.props;
     return Object.keys(feedByQuery).map(query => {
       const feed = feedByQuery[query];
-      const handleReload = () => postQueryRequest({ query });
+      const handleReload = () => searchRequest({ query });
       const handleDiscard = () => discardQuery({ query });
       return (
         <Feed
