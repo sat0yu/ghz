@@ -9,7 +9,7 @@ interface Props {
   handleDiscard: () => void;
 }
 
-const CardList: React.FC<Props> = props => (
+const Feed: React.FC<Props> = props => (
   <div>
     <Button onClick={props.handleReload}>
       <p>reload</p>
@@ -28,4 +28,4 @@ const CardList: React.FC<Props> = props => (
   </div>
 );
 
-export default CardList;
+export default Feed;

@@ -6,7 +6,7 @@ import {
   queryBrowserSelectors,
 } from '../../state/queryBrowser';
 import { RootState } from '../../state/store';
-import CardList from '../components/CardList';
+import Feed from '../components/Feed';
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
@@ -33,7 +33,7 @@ class CardBrowser extends React.Component<Props> {
       const handleReload = () => postQueryRequest({ query });
       const handleDiscard = () => discardQuery({ query });
       return (
-        <CardList
+        <Feed
           key={query}
           feed={feed}
           handleReload={handleReload}
