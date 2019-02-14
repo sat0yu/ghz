@@ -1,25 +1,35 @@
+import { isUndefined } from 'lodash-es';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { bindThunkAction } from 'typescript-fsa-redux-thunk';
 import GithubApi from '../../helpers/GithubApi';
-import { Feed } from '../../interfaces/card';
+import { SearchQuery } from '../../interfaces/card';
 import { ApiError, SearchResult } from '../../interfaces/GithubAPI';
 import { types } from './types';
 
 const actionCreator = actionCreatorFactory();
 
-type PartialFeed = Partial<Feed> & { query: string };
+interface SearchParams extends SearchQuery {
+  direction?: Direction;
+}
 
-const buildSearchParams = (feed: PartialFeed) => {
-  const { query } = feed;
+export const enum Direction {
+  BEFORE = 'BEFORE',
+  AFTER = 'AFTER',
+}
+
+const buildSearchQuery = ({ query, pageInfo, direction }: SearchParams) => {
+  const RESULT_PER_PAGE = 50;
   const safeQuery = query.replace(/"/g, '\\"');
-  return `query: "${safeQuery}", first: 100, type: ISSUE`;
-};
-
-const buildSearchQuery = (feed: PartialFeed) => {
-  const params = buildSearchParams(feed);
+  const base = `query: "${safeQuery}", type: ISSUE`;
+  const option =
+    isUndefined(pageInfo) || isUndefined(direction)
+      ? `${base}, first: ${RESULT_PER_PAGE}`
+      : direction === Direction.BEFORE
+      ? `${base}, before: "${pageInfo.startCursor}", last: ${RESULT_PER_PAGE}`
+      : `${base}, after: "${pageInfo.endCursor}", first: ${RESULT_PER_PAGE}`;
   return `
     query {
-      search(${params}){
+      search(${option}){
         pageInfo {
           endCursor
           hasNextPage
@@ -61,16 +71,12 @@ const buildSearchQuery = (feed: PartialFeed) => {
   `;
 };
 
-interface SearchParams {
-  query: string;
-}
-
 export const search = actionCreator.async<SearchParams, SearchResult, ApiError>(
   types.POST_QUERY,
 );
 
-const searchRequest = bindThunkAction(search, async ({ query }, _dispatch) => {
-  const gql = buildSearchQuery({ query });
+const searchRequest = bindThunkAction(search, async (params, _dispatch) => {
+  const gql = buildSearchQuery(params);
   const res = await GithubApi.call(gql);
   const json = await res.json();
   if (json.errors) {
@@ -78,31 +84,6 @@ const searchRequest = bindThunkAction(search, async ({ query }, _dispatch) => {
   }
   return json.data.search;
 });
-
-interface LoadMoreParams {
-  feed: Feed;
-}
-
-type LoadMoreResult = SearchResult;
-
-export const loadMore = actionCreator.async<
-  LoadMoreParams,
-  LoadMoreResult,
-  ApiError
->(types.LOAD_MORE_QUERY);
-
-const loadMoreRequest = bindThunkAction(
-  loadMore,
-  async ({ feed }, _dispatch) => {
-    const gql = buildSearchQuery(feed);
-    const res = await GithubApi.call(gql);
-    const json = await res.json();
-    if (json.errors) {
-      throw new ApiError(json.errors);
-    }
-    return json.data.search;
-  },
-);
 
 interface DiscardQueryParams {
   query: string;
@@ -112,4 +93,7 @@ export const discardQuery = actionCreator<DiscardQueryParams>(
   types.DIDCARD_QUERY,
 );
 
-export default { searchRequest, discardQuery, loadMoreRequest };
+export default {
+  searchRequest,
+  discardQuery,
+};

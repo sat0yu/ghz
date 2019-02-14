@@ -1,43 +1,41 @@
 import { omit } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { ApiError, SearchResult } from '../../interfaces/GithubAPI';
+import { SearchQuery, Status } from '../../interfaces/card';
 import { discardQuery, search } from './actions';
 
-export interface SearchQuery {
-  query: string;
-  result?: SearchResult;
-  isFeatching: boolean;
-  error: ApiError;
-}
+interface FeedState extends SearchQuery, Status {}
 
 interface QueryBrowserState {
-  [query: string]: SearchQuery;
+  [query: string]: FeedState;
 }
 
 export const initialState = {};
 
 export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
-  .case(search.started, (state, payload) => ({
+  .case(search.started, (state, { query, pageInfo }) => ({
     ...state,
-    [payload.query]: {
-      ...(state[payload.query] || {}),
+    [query]: {
+      query,
+      pageInfo,
       isFeatching: true,
+      error: undefined,
     },
   }))
-  .case(search.failed, (state, payload) => ({
+  .case(search.failed, (state, { params, error }) => ({
     ...state,
-    [payload.params.query]: {
-      ...(state[payload.params.query] || {}),
+    [params.query]: {
+      error,
+      ...params,
       isFeatching: false,
-      error: payload.error,
     },
   }))
-  .case(search.done, (state, payload) => ({
+  .case(search.done, (state, { params, result }) => ({
     ...state,
-    [payload.params.query]: {
-      ...(state[payload.params.query] || {}),
+    [params.query]: {
+      result,
+      ...params,
       isFeatching: false,
-      result: payload.result,
+      error: undefined,
     },
   }))
   .case(discardQuery, (state, payload) => omit(state, payload.query));

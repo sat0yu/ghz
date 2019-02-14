@@ -1,15 +1,22 @@
-import { ApiError, PageInfo } from './GithubAPI';
+import { ApiError, PageInfo, SearchResult } from './GithubAPI';
 
 export interface FeedIndexByQuery {
   [query: string]: Feed;
 }
 
-export interface Feed {
-  pageInfo: PageInfo;
+export interface SearchQuery {
+  pageInfo?: PageInfo;
   query: string;
-  cards: Card[];
+}
+
+export interface Status {
   isFeatching: boolean;
-  error: ApiError;
+  error?: ApiError;
+  result?: SearchResult;
+}
+
+export interface Feed extends SearchQuery, Status {
+  cards: Card[];
 }
 
 export interface CardsIndexByQuery {
