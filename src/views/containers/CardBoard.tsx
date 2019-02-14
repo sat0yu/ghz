@@ -5,6 +5,7 @@ import {
   queryBrowserOperations,
   queryBrowserSelectors,
 } from '../../state/queryBrowser';
+import { Direction } from '../../state/queryBrowser/actions';
 import { RootState } from '../../state/store';
 import Feed from '../components/Feed';
 
@@ -30,13 +31,16 @@ class CardBrowser extends React.Component<Props> {
     const { feedByQuery, searchRequest, discardQuery } = this.props;
     return Object.keys(feedByQuery).map(query => {
       const feed = feedByQuery[query];
-      const handleReload = () => searchRequest({ query });
+      const handleReload = () => searchRequest(feed);
+      const handleLoadMore = () =>
+        searchRequest({ ...feed, direction: Direction.AFTER });
       const handleDiscard = () => discardQuery({ query });
       return (
         <Feed
           key={query}
           feed={feed}
           handleReload={handleReload}
+          handleLoadMore={handleLoadMore}
           handleDiscard={handleDiscard}
         />
       );
