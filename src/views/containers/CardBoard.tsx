@@ -32,7 +32,9 @@ class CardBrowser extends React.Component<Props> {
     return Object.keys(feedByQuery).map(query => {
       const feed = feedByQuery[query];
       const handleReload = () => searchRequest(feed);
-      const handleLoadMore = () =>
+      const handleLoadNewerUpdates = () =>
+        searchRequest({ ...feed, direction: Direction.BEFORE });
+      const handleLoadOlderUpdates = () =>
         searchRequest({ ...feed, direction: Direction.AFTER });
       const handleDiscard = () => discardQuery({ query });
       return (
@@ -40,7 +42,8 @@ class CardBrowser extends React.Component<Props> {
           key={query}
           feed={feed}
           handleReload={handleReload}
-          handleLoadMore={handleLoadMore}
+          handleLoadNewerUpdates={handleLoadNewerUpdates}
+          handleLoadOlderUpdates={handleLoadOlderUpdates}
           handleDiscard={handleDiscard}
         />
       );

@@ -6,7 +6,8 @@ import Card from './Card';
 interface Props {
   feed: Feed;
   handleReload: () => void;
-  handleLoadMore: () => void;
+  handleLoadNewerUpdates: () => void;
+  handleLoadOlderUpdates: () => void;
   handleDiscard: () => void;
 }
 
@@ -15,8 +16,11 @@ const Feed: React.FC<Props> = props => (
     <Button onClick={props.handleReload}>
       <p>reload</p>
     </Button>
-    <Button onClick={props.handleLoadMore}>
-      <p>load more</p>
+    <Button onClick={props.handleLoadNewerUpdates}>
+      <p>load recent updates</p>
+    </Button>
+    <Button onClick={props.handleLoadOlderUpdates}>
+      <p>load older updates</p>
     </Button>
     <Button onClick={props.handleDiscard}>
       <p>discard</p>

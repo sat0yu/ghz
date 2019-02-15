@@ -46,24 +46,46 @@ export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
   .case(search.done, (state, { params, result }) => {
     const { query, direction } = params;
     const { pageInfo, edges } = result;
-    const { result: currentResult } = state[query];
+    const { result: currentResult, pageInfo: currentPageInfo } = state[query];
+    const nextPageInfo =
+      isUndefined(currentPageInfo) || isUndefined(direction)
+        ? pageInfo
+        : direction === Direction.BEFORE
+        ? {
+            // since loaded newer updates,
+            // do not touch the page information about the succeedings
+            endCursor: pageInfo.endCursor,
+            hasNextPage: pageInfo.hasNextPage,
+            hasPreviousPage:
+              pageInfo.hasPreviousPage || currentPageInfo.hasPreviousPage,
+            startCursor: pageInfo.startCursor || currentPageInfo.startCursor,
+          }
+        : {
+            endCursor: pageInfo.endCursor || currentPageInfo.endCursor,
+            hasNextPage: pageInfo.hasNextPage || currentPageInfo.hasNextPage,
+            // since loaded older updates,
+            // do not touch the page information about the precedings
+            hasPreviousPage: pageInfo.hasPreviousPage,
+            startCursor: pageInfo.startCursor,
+          };
     const nextEdges =
       isUndefined(currentResult) || isUndefined(direction)
-        ? result.edges
+        ? edges
         : direction === Direction.BEFORE
         ? [...edges, ...currentResult.edges]
         : [...currentResult.edges, ...edges];
+    const nextResult = {
+      pageInfo: nextPageInfo,
+      edges: nextEdges,
+    };
     return {
       ...state,
       [query]: {
         query,
-        pageInfo,
         isFeatching: false,
         error: undefined,
-        result: {
-          pageInfo,
-          edges: nextEdges,
-        },
+        pageInfo: nextResult.pageInfo,
+        result: nextResult,
       },
     };
   })
