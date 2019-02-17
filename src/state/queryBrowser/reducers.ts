@@ -54,8 +54,8 @@ export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
         ? {
             // since loaded newer updates,
             // do not touch the page information about the succeedings
-            endCursor: pageInfo.endCursor,
-            hasNextPage: pageInfo.hasNextPage,
+            endCursor: currentPageInfo.endCursor,
+            hasNextPage: currentPageInfo.hasNextPage,
             hasPreviousPage:
               pageInfo.hasPreviousPage || currentPageInfo.hasPreviousPage,
             startCursor: pageInfo.startCursor || currentPageInfo.startCursor,
@@ -65,8 +65,8 @@ export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
             hasNextPage: pageInfo.hasNextPage || currentPageInfo.hasNextPage,
             // since loaded older updates,
             // do not touch the page information about the precedings
-            hasPreviousPage: pageInfo.hasPreviousPage,
-            startCursor: pageInfo.startCursor,
+            hasPreviousPage: currentPageInfo.hasPreviousPage,
+            startCursor: currentPageInfo.startCursor,
           };
     const nextEdges =
       isUndefined(currentResult) || isUndefined(direction)
