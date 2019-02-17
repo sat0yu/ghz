@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Card } from '../../interfaces/card';
+import { Card as CardInterface } from '../../interfaces/card';
 
 interface Props {
-  card: Card;
+  card: CardInterface;
 }
 
 const Card: React.FC<Props> = ({ card }) => (

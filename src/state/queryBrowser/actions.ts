@@ -12,7 +12,7 @@ interface SearchParams extends SearchQuery {
   direction?: Direction;
 }
 
-export const enum Direction {
+export enum Direction {
   BEFORE = 'BEFORE',
   AFTER = 'AFTER',
 }

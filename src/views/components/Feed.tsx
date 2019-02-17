@@ -1,10 +1,10 @@
 import { Button } from '@material-ui/core';
 import * as React from 'react';
-import { Feed } from '../../interfaces/card';
+import { Feed as FeedInterface } from '../../interfaces/card';
 import Card from './Card';
 
 interface Props {
-  feed: Feed;
+  feed: FeedInterface;
   handleReload: () => void;
   handleLoadNewerUpdates: () => void;
   handleLoadOlderUpdates: () => void;
