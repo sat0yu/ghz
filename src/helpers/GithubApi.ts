@@ -1,22 +1,28 @@
-import { isUndefined, omitBy } from 'lodash-es';
+import { isUndefined } from 'lodash-es';
 import { Auth } from './Auth';
 
 const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
 
-const enum Method {
+enum Method {
   POST = 'post',
 }
 
 const defaultHeaders: () => HeadersInit = () => {
   const accessToken = Auth.getAccessToken();
-  return omitBy(
-    {
-      Accept: 'application/json',
-      Authorization: accessToken ? `bearer ${accessToken}` : undefined,
-      'Content-Type': 'application/json',
-    },
-    isUndefined,
-  );
+  const dirtyHeaders = {
+    Accept: 'application/json',
+    Authorization: accessToken ? `bearer ${accessToken}` : undefined,
+    'Content-Type': 'application/json',
+  };
+  return Object.keys(dirtyHeaders).reduce((acc, key) => {
+    const value = dirtyHeaders[key];
+    return isUndefined(value)
+      ? acc
+      : {
+          ...acc,
+          [key]: value,
+        };
+  }, {});
 };
 
 const buildPayload = (options: RequestInit) => ({
