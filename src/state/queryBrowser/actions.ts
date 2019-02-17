@@ -24,9 +24,12 @@ const buildSearchQuery = ({ query, pageInfo, direction }: SearchParams) => {
   const option =
     isUndefined(pageInfo) || isUndefined(direction)
       ? `${base}, first: ${RESULT_PER_PAGE}`
-      : direction === Direction.BEFORE
+      : direction === Direction.BEFORE && pageInfo.hasPreviousPage
       ? `${base}, before: "${pageInfo.startCursor}", last: ${RESULT_PER_PAGE}`
-      : `${base}, after: "${pageInfo.endCursor}", first: ${RESULT_PER_PAGE}`;
+      : direction === Direction.AFTER && pageInfo.hasNextPage
+      ? `${base}, after: "${pageInfo.endCursor}", first: ${RESULT_PER_PAGE}`
+      : // this line is just for a fallback, basically never reach here
+        `${base}, first: ${RESULT_PER_PAGE}`;
   return `
     query {
       search(${option}){
