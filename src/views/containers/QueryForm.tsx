@@ -12,7 +12,7 @@ type Props = DispatchProps;
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      postQueryRequest: queryBrowserOperations.postQueryRequest,
+      searchRequest: queryBrowserOperations.searchRequest,
     },
     dispatch,
   );
@@ -54,7 +54,7 @@ class QueryForm extends React.Component<Props, State> {
     this.setState({ value: event.target.value });
   }
   private handleClickSearchButton() {
-    this.props.postQueryRequest({ query: this.state.value });
+    this.props.searchRequest({ query: this.state.value });
   }
 }
 

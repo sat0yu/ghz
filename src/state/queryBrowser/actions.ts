@@ -1,46 +1,92 @@
+import { isUndefined } from 'lodash-es';
+import { actionCreatorFactory } from 'typescript-fsa';
 import { bindThunkAction } from 'typescript-fsa-redux-thunk';
 import GithubApi from '../../helpers/GithubApi';
-import types from './types';
+import { SearchQuery } from '../../interfaces/card';
+import { ApiError, SearchResult } from '../../interfaces/GithubAPI';
+import { types } from './types';
 
-import { actionCreatorFactory } from 'typescript-fsa';
 const actionCreator = actionCreatorFactory();
 
-interface PostQueryParams {
-  query: string;
-}
-interface PostQueryPayload {
-  json: string;
+interface SearchParams extends SearchQuery {
+  direction?: Direction;
 }
 
-export const postQuery = actionCreator.async<
-  PostQueryParams,
-  PostQueryPayload,
-  Error
->(types.POST_QUERY);
+export enum Direction {
+  BEFORE = 'BEFORE',
+  AFTER = 'AFTER',
+}
 
-const postQueryRequest = bindThunkAction(
-  postQuery,
-  async ({ query }, _dispatch) => {
-    const gql = `query {
-      search(query: "${query}", first: 100, type: ISSUE){
+const buildSearchQuery = ({ query, pageInfo, direction }: SearchParams) => {
+  const RESULT_PER_PAGE = 50;
+  const safeQuery = query.replace(/"/g, '\\"');
+  const base = `query: "${safeQuery}", type: ISSUE`;
+  const option =
+    isUndefined(pageInfo) || isUndefined(direction)
+      ? `${base}, first: ${RESULT_PER_PAGE}`
+      : direction === Direction.BEFORE && pageInfo.hasPreviousPage
+      ? `${base}, before: "${pageInfo.startCursor}", last: ${RESULT_PER_PAGE}`
+      : direction === Direction.AFTER && pageInfo.hasNextPage
+      ? `${base}, after: "${pageInfo.endCursor}", first: ${RESULT_PER_PAGE}`
+      : // this line is just for a fallback, basically never reach here
+        `${base}, first: ${RESULT_PER_PAGE}`;
+  return `
+    query {
+      search(${option}){
+        pageInfo {
+          endCursor
+          hasNextPage
+          hasPreviousPage
+          startCursor
+        }
         edges {
-          cursor
           node {
             ...on Issue {
+              ...comment
+              title
+              closed
+              id
               url
             }
             ... on PullRequest {
+              ...comment
+              title
+              closed
+              id
               url
             }
           }
         }
       }
-    }`;
-    const res = await GithubApi.call(gql);
-    const json = await res.json();
-    return { json: JSON.stringify(json) };
-  },
+    }
+    fragment actor on Actor {
+      avatarUrl
+      login
+      url
+    }
+    fragment comment on Comment {
+      author {
+        ...actor
+      }
+      updatedAt
+      createdAt
+    }
+  `;
+};
+
+export const search = actionCreator.async<SearchParams, SearchResult, ApiError>(
+  types.POST_QUERY,
 );
+
+const searchRequest = bindThunkAction(search, async (params, _dispatch) => {
+  const gql = buildSearchQuery(params);
+  const res = await GithubApi.call(gql);
+  const json = await res.json();
+  if (json.errors) {
+    throw new ApiError(json.errors);
+  }
+  return json.data.search;
+});
 
 interface DiscardQueryParams {
   query: string;
@@ -50,4 +96,7 @@ export const discardQuery = actionCreator<DiscardQueryParams>(
   types.DIDCARD_QUERY,
 );
 
-export default { postQueryRequest, discardQuery };
+export default {
+  searchRequest,
+  discardQuery,
+};

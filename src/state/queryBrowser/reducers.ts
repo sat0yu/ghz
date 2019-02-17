@@ -1,58 +1,92 @@
-import { omit } from 'lodash-es';
+import { isUndefined, omit, uniqBy } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { discardQuery, postQuery } from './actions';
+import { SearchQuery, Status } from '../../interfaces/card';
+import { Direction, discardQuery, search } from './actions';
 
-export interface SearchQuery {
-  query: string;
-  result: string;
-  isFeatching: boolean;
+interface FeedState extends SearchQuery, Status {}
+
+interface QueryBrowserState {
+  [query: string]: FeedState;
 }
 
-interface SearchQueryMap {
-  [query: string]: SearchQuery;
-}
+export const initialState = {};
 
-interface State {
-  searchQueryMap: SearchQueryMap;
-}
-
-export const initialState = {
-  searchQueryMap: {},
-};
-
-export const reducers = reducerWithInitialState<State>(initialState)
-  .case(postQuery.started, (state, payload) => ({
-    ...state,
-    searchQueryMap: {
-      ...state.searchQueryMap,
-      [payload.query]: {
-        ...(state.searchQueryMap[payload.query] || {}),
+export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
+  .case(search.started, (state, { query, pageInfo }) => {
+    const result = (state[query] || {}).result;
+    return {
+      ...state,
+      [query]: {
+        query,
+        pageInfo,
+        result,
         isFeatching: true,
+        error: undefined,
       },
-    },
-  }))
-  .case(postQuery.failed, (state, payload) => ({
-    ...state,
-    searchQueryMap: {
-      ...state.searchQueryMap,
-      [payload.params.query]: {
-        ...(state.searchQueryMap[payload.params.query] || {}),
+    };
+  })
+  .case(search.failed, (state, { params, error }) => {
+    const { query, pageInfo } = params;
+    const {
+      query: currentQuery,
+      pageInfo: currentPageInfo,
+      result: currentResult,
+    } = state[query];
+    return {
+      ...state,
+      [query]: {
+        error,
         isFeatching: false,
+        query: query || currentQuery,
+        pageInfo: pageInfo || currentPageInfo,
+        result: currentResult,
       },
-    },
-  }))
-  .case(postQuery.done, (state, payload) => ({
-    ...state,
-    searchQueryMap: {
-      ...state.searchQueryMap,
-      [payload.params.query]: {
-        ...(state.searchQueryMap[payload.params.query] || {}),
+    };
+  })
+  .case(search.done, (state, { params, result }) => {
+    const { query, direction } = params;
+    const { pageInfo, edges } = result;
+    const { result: currentResult, pageInfo: currentPageInfo } = state[query];
+    const nextPageInfo =
+      isUndefined(currentPageInfo) || isUndefined(direction)
+        ? pageInfo
+        : direction === Direction.BEFORE
+        ? {
+            // since loaded newer updates,
+            // do not touch the page information about the succeedings
+            endCursor: currentPageInfo.endCursor,
+            hasNextPage: currentPageInfo.hasNextPage,
+            hasPreviousPage:
+              pageInfo.hasPreviousPage || currentPageInfo.hasPreviousPage,
+            startCursor: pageInfo.startCursor || currentPageInfo.startCursor,
+          }
+        : {
+            endCursor: pageInfo.endCursor || currentPageInfo.endCursor,
+            hasNextPage: pageInfo.hasNextPage || currentPageInfo.hasNextPage,
+            // since loaded older updates,
+            // do not touch the page information about the precedings
+            hasPreviousPage: currentPageInfo.hasPreviousPage,
+            startCursor: currentPageInfo.startCursor,
+          };
+    const nextEdges =
+      isUndefined(currentResult) || isUndefined(direction)
+        ? edges
+        : direction === Direction.BEFORE
+        ? uniqBy([...edges, ...currentResult.edges], 'node.id')
+        : uniqBy([...currentResult.edges, ...edges], 'node.id');
+    const nextResult = {
+      pageInfo: nextPageInfo,
+      edges: nextEdges,
+    };
+    return {
+      ...state,
+      [query]: {
+        query,
         isFeatching: false,
-        result: payload.result.json,
+        error: undefined,
+        pageInfo: nextResult.pageInfo,
+        result: nextResult,
       },
-    },
-  }))
-  .case(discardQuery, (state, payload) => ({
-    ...state,
-    searchQueryMap: omit(state.searchQueryMap, payload.query),
-  }));
+    };
+  })
+  .case(discardQuery, (state, payload) => omit(state, payload.query));
