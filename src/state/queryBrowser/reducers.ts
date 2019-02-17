@@ -1,4 +1,4 @@
-import { isUndefined, omit } from 'lodash-es';
+import { isUndefined, omit, uniqBy } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { SearchQuery, Status } from '../../interfaces/card';
 import { Direction, discardQuery, search } from './actions';
@@ -72,8 +72,8 @@ export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
       isUndefined(currentResult) || isUndefined(direction)
         ? edges
         : direction === Direction.BEFORE
-        ? [...edges, ...currentResult.edges]
-        : [...currentResult.edges, ...edges];
+        ? uniqBy([...edges, ...currentResult.edges], 'node.id')
+        : uniqBy([...currentResult.edges, ...edges], 'node.id');
     const nextResult = {
       pageInfo: nextPageInfo,
       edges: nextEdges,
