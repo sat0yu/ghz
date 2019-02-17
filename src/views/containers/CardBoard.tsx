@@ -29,13 +29,14 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 class CardBrowser extends React.Component<Props> {
   public render() {
     const { feedByQuery, searchRequest, discardQuery } = this.props;
-    return Object.keys(feedByQuery).map(query => {
-      const feed = feedByQuery[query];
-      const handleReload = () => searchRequest(feed);
+    return Object.keys(feedByQuery).map(key => {
+      const feed = feedByQuery[key];
+      const { pageInfo, query } = feed;
+      const handleReload = () => searchRequest({ pageInfo, query });
       const handleLoadNewerUpdates = () =>
-        searchRequest({ ...feed, direction: Direction.BEFORE });
+        searchRequest({ pageInfo, query, direction: Direction.BEFORE });
       const handleLoadOlderUpdates = () =>
-        searchRequest({ ...feed, direction: Direction.AFTER });
+        searchRequest({ pageInfo, query, direction: Direction.AFTER });
       const handleDiscard = () => discardQuery({ query });
       return (
         <Feed
