@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from 'react-native';
 import * as React from 'react';
 import { Feed as FeedInterface } from '../../interfaces/card';
 import Card from './Card';
@@ -13,18 +13,13 @@ interface Props {
 
 const Feed: React.FC<Props> = props => (
   <div>
-    <Button onClick={props.handleReload}>
-      <p>reload</p>
-    </Button>
-    <Button onClick={props.handleLoadNewerUpdates}>
-      <p>load recent updates</p>
-    </Button>
-    <Button onClick={props.handleLoadOlderUpdates}>
-      <p>load older updates</p>
-    </Button>
-    <Button onClick={props.handleDiscard}>
-      <p>discard</p>
-    </Button>
+    <Button title="reload" onPress={props.handleReload} />
+    <Button
+      title="load recent updates"
+      onPress={props.handleLoadNewerUpdates}
+    />
+    <Button title="load older updates" onPress={props.handleLoadOlderUpdates} />
+    <Button title="discard" onPress={props.handleDiscard} />
     <p>{`${props.feed.query}: ${
       props.feed.isFeatching ? 'loading' : 'done'
     }`}</p>

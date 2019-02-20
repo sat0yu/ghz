@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import { default as SettingsIcon } from '@material-ui/icons/Settings';
+import { TextInput, Button } from 'react-native';
 import * as React from 'react';
 import { Auth } from '../../helpers/Auth';
 
@@ -8,16 +6,13 @@ const ConfigurationForm: React.FC = () => {
   const [value, setValue] = React.useState(Auth.getAccessToken());
   return (
     <form noValidate={true} autoComplete="off">
-      <TextField
-        label="Access Token"
+      <TextInput
         value={value}
-        onChange={e => setValue(e.target.value)}
-        margin="normal"
-        variant="outlined"
+        onChange={e => {
+          setValue(e.type);
+        }}
       />
-      <IconButton onClick={() => Auth.setAccessToken(value || '')}>
-        <SettingsIcon />
-      </IconButton>
+      <Button title="apply" onPress={() => Auth.setAccessToken(value || '')} />
     </form>
   );
 };
