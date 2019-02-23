@@ -1,5 +1,6 @@
-import { TextInput, Button } from 'react-native';
+import { TextInput } from 'react-native';
 import * as React from 'react';
+import { Button } from 'react-native-elements';
 import { Auth } from '../../helpers/Auth';
 
 const ConfigurationForm: React.FC = () => {
