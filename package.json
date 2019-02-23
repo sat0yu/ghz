@@ -117,6 +117,7 @@
     ],
     "resolver": "jest-pnp-resolver",
     "setupFiles": [
+      "jest-canvas-mock",
       "react-app-polyfill/jsdom"
     ],
     "testMatch": [
@@ -131,7 +132,7 @@
       "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\](?!lodash-es).+\\.(js|jsx|ts|tsx)$",
+      "[/\\\\]node_modules[/\\\\](?!(lodash-es|react-native-elements|react-native-vector-icons|react-native-status-bar-height|react-native-ratings)).+\\.(js|jsx|ts|tsx)$",
       "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
