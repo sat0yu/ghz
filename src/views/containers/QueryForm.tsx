@@ -1,13 +1,13 @@
 import {
-  TextInput,
-  Button,
   NativeSyntheticEvent,
   TextInputChangeEventData,
+  View,
 } from 'react-native';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { queryBrowserOperations } from '../../state/queryBrowser';
+import { Input, Button } from 'react-native-elements';
 
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type Props = DispatchProps;
@@ -36,14 +36,14 @@ class QueryForm extends React.Component<Props, State> {
 
   public render() {
     return (
-      <form noValidate={true} autoComplete="off">
-        <TextInput
+      <View>
+        <Input
           placeholder={QueryForm.defaultQuery}
           value={this.state.value}
           onChange={this.handleOnChange}
         />
         <Button title="search" onPress={this.handleClickSearchButton} />
-      </form>
+      </View>
     );
   }
 

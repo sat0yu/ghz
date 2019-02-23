@@ -1,7 +1,10 @@
-import { Button } from 'react-native';
+import { View, FlatList, ListRenderItem } from 'react-native';
 import * as React from 'react';
-import { Feed as FeedInterface } from '../../interfaces/card';
-import Card from './Card';
+import {
+  Feed as FeedInterface,
+  Card as CardInterface,
+} from '../../interfaces/card';
+import { Button, ListItem } from 'react-native-elements';
 
 interface Props {
   feed: FeedInterface;
@@ -11,8 +14,16 @@ interface Props {
   handleDiscard: () => void;
 }
 
+const renderListItem: ListRenderItem<CardInterface> = ({ item }) => (
+  <ListItem
+    title={item.title}
+    subtitle={item.updatedAt}
+    leftAvatar={{ source: { uri: item.author.avatarUrl } }}
+  />
+);
+
 const Feed: React.FC<Props> = props => (
-  <div>
+  <View>
     <Button title="reload" onPress={props.handleReload} />
     <Button
       title="load recent updates"
@@ -23,12 +34,8 @@ const Feed: React.FC<Props> = props => (
     <p>{`${props.feed.query}: ${
       props.feed.isFeatching ? 'loading' : 'done'
     }`}</p>
-    <ul>
-      {props.feed.cards.map(card => (
-        <Card key={card.id} card={card} />
-      ))}
-    </ul>
-  </div>
+    <FlatList data={props.feed.cards} renderItem={renderListItem} />
+  </View>
 );
 
 export default Feed;
