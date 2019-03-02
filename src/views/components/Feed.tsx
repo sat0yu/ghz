@@ -34,6 +34,7 @@ const Feed: React.FC<Props> = props => (
     <p>{`${props.feed.query}: ${
       props.feed.isFeatching ? 'loading' : 'done'
     }`}</p>
+    <p>{props.feed.cards.length}</p>
     <FlatList data={props.feed.cards} renderItem={renderListItem} />
   </View>
 );
