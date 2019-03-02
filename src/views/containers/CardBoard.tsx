@@ -27,7 +27,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
     dispatch,
   );
 
-class CardBrowser extends React.Component<Props> {
+class CardBoard extends React.Component<Props> {
   public render() {
     const { feedByQuery, searchRequest, discardQuery } = this.props;
     return Object.keys(feedByQuery).map(key => {
@@ -58,4 +58,4 @@ class CardBrowser extends React.Component<Props> {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CardBrowser);
+)(CardBoard);
