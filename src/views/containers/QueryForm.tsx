@@ -1,8 +1,4 @@
-import {
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
-  View,
-} from 'react-native';
+import { View } from 'react-native';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -40,19 +36,17 @@ class QueryForm extends React.Component<Props, State> {
         <Input
           placeholder={QueryForm.defaultQuery}
           value={this.state.value}
-          onChange={this.handleOnChange}
+          onChangeText={this.handleOnChange}
         />
         <Button title="search" onPress={this.handleClickSearchButton} />
       </View>
     );
   }
 
-  private handleOnChange(
-    event: NativeSyntheticEvent<TextInputChangeEventData>,
-  ) {
-    event.preventDefault();
-    this.setState({ value: event.target.toString() });
+  private handleOnChange(value: string) {
+    this.setState({ value });
   }
+
   private handleClickSearchButton() {
     this.props.searchRequest({ query: this.state.value });
   }

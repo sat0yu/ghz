@@ -4,16 +4,11 @@ import { Input, Button } from 'react-native-elements';
 import { Auth } from '../../helpers/Auth';
 
 const ConfigurationForm: React.FC = () => {
-  const [value, setValue] = React.useState(Auth.getAccessToken());
+  const [value, setValue] = React.useState(Auth.getAccessToken() || '');
   return (
     <View>
-      <Input
-        value={value}
-        onChange={e => {
-          setValue(e.type);
-        }}
-      />
-      <Button title="apply" onPress={() => Auth.setAccessToken(value || '')} />
+      <Input value={value} onChangeText={setValue} />
+      <Button title="apply" onPress={() => Auth.setAccessToken(value)} />
     </View>
   );
 };
