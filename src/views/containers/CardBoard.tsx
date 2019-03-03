@@ -8,7 +8,12 @@ import {
 import { Direction } from '../../state/queryBrowser/actions';
 import { RootState } from '../../state/store';
 import Feed from '../components/Feed';
-import { View } from 'react-native';
+import {
+  TabView,
+  TabContent,
+  TabList,
+  TabSelector,
+} from '../components/TabView';
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
@@ -30,7 +35,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 class CardBoard extends React.Component<Props> {
   public render() {
     const { feedByQuery, searchRequest, discardQuery } = this.props;
-    return Object.keys(feedByQuery).map(key => {
+    const tabList = Object.keys(feedByQuery).reduce((acc, key) => {
       const feed = feedByQuery[key];
       const { pageInfo, query } = feed;
       const handleReload = () => searchRequest({ pageInfo, query });
@@ -39,19 +44,33 @@ class CardBoard extends React.Component<Props> {
       const handleLoadOlderUpdates = () =>
         searchRequest({ pageInfo, query, direction: Direction.AFTER });
       const handleDiscard = () => discardQuery({ query });
-      return (
-        <View>
-          <Feed
-            key={query}
-            feed={feed}
-            handleReload={handleReload}
-            handleLoadNewerUpdates={handleLoadNewerUpdates}
-            handleLoadOlderUpdates={handleLoadOlderUpdates}
-            handleDiscard={handleDiscard}
-          />
-        </View>
-      );
-    });
+      return {
+        ...acc,
+        [key]: (
+          <TabContent key={key} tabId={key}>
+            <Feed
+              key={query}
+              feed={feed}
+              handleReload={handleReload}
+              handleLoadNewerUpdates={handleLoadNewerUpdates}
+              handleLoadOlderUpdates={handleLoadOlderUpdates}
+              handleDiscard={handleDiscard}
+            />
+          </TabContent>
+        ),
+      };
+    }, {});
+
+    return (
+      <TabView>
+        <TabList>
+          {Object.keys(tabList).map(key => (
+            <TabSelector tabId={key}>{key}</TabSelector>
+          ))}
+        </TabList>
+        {Object.values(tabList)}
+      </TabView>
+    );
   }
 }
 
