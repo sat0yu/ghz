@@ -1,52 +1,49 @@
-import { isUndefined, omit, uniqBy } from 'lodash-es';
+import { isUndefined, uniqBy, omit } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { SearchQuery, Status } from '../../interfaces/card';
+import { Feed } from '../../interfaces/card';
 import { Direction, discardQuery, search } from './actions';
 
-interface FeedState extends SearchQuery, Status {}
-
 interface QueryBrowserState {
-  [query: string]: FeedState;
+  [query: string]: Feed;
 }
 
 export const initialState = {};
 
 export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
   .case(search.started, (state, { query, pageInfo }) => {
-    const result = (state[query] || {}).result;
+    const currentFeed = state[query];
     return {
       ...state,
       [query]: {
         query,
         pageInfo,
-        result,
-        isFeatching: true,
+        // currentFeed should be `undefiend` when the query is thrown for the first time
+        cards: (currentFeed && currentFeed.cards) || [],
         error: undefined,
+        isFeatching: true,
       },
     };
   })
   .case(search.failed, (state, { params, error }) => {
     const { query, pageInfo } = params;
-    const {
-      query: currentQuery,
-      pageInfo: currentPageInfo,
-      result: currentResult,
-    } = state[query];
+    const currentFeed = state[query];
     return {
       ...state,
       [query]: {
         error,
+        query,
+        pageInfo,
+        // currentFeed should NOT be `undefiend`
+        // because it is supposed to be populated in search.started
+        cards: (currentFeed && currentFeed.cards) || [],
         isFeatching: false,
-        query: query || currentQuery,
-        pageInfo: pageInfo || currentPageInfo,
-        result: currentResult,
       },
     };
   })
   .case(search.done, (state, { params, result }) => {
     const { query, direction } = params;
-    const { pageInfo, edges } = result;
-    const { result: currentResult, pageInfo: currentPageInfo } = state[query];
+    const { pageInfo } = result;
+    const { pageInfo: currentPageInfo, cards: currentCards } = state[query];
     const nextPageInfo =
       isUndefined(currentPageInfo) || isUndefined(direction)
         ? pageInfo
@@ -68,24 +65,20 @@ export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
             hasPreviousPage: currentPageInfo.hasPreviousPage,
             startCursor: currentPageInfo.startCursor,
           };
-    const nextEdges =
-      isUndefined(currentResult) || isUndefined(direction)
-        ? edges
-        : direction === Direction.BEFORE
-        ? uniqBy([...edges, ...currentResult.edges], 'node.id')
-        : uniqBy([...currentResult.edges, ...edges], 'node.id');
-    const nextResult = {
-      pageInfo: nextPageInfo,
-      edges: nextEdges,
-    };
+    const fetchedCards = result.edges.map(edge => edge.node);
+    const nextCards = isUndefined(direction)
+      ? fetchedCards
+      : direction === Direction.BEFORE
+      ? uniqBy([...fetchedCards, ...currentCards], 'id')
+      : uniqBy([...currentCards, ...fetchedCards], 'id');
     return {
       ...state,
       [query]: {
         query,
         isFeatching: false,
         error: undefined,
-        pageInfo: nextResult.pageInfo,
-        result: nextResult,
+        pageInfo: nextPageInfo,
+        cards: nextCards,
       },
     };
   })

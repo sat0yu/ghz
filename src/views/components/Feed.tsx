@@ -1,7 +1,10 @@
-import { Button } from '@material-ui/core';
+import { View, FlatList, ListRenderItem } from 'react-native';
 import * as React from 'react';
-import { Feed as FeedInterface } from '../../interfaces/card';
-import Card from './Card';
+import {
+  Feed as FeedInterface,
+  Card as CardInterface,
+} from '../../interfaces/card';
+import { Button, ListItem } from 'react-native-elements';
 
 interface Props {
   feed: FeedInterface;
@@ -11,29 +14,29 @@ interface Props {
   handleDiscard: () => void;
 }
 
+const renderListItem: ListRenderItem<CardInterface> = ({ item }) => (
+  <ListItem
+    title={item.title}
+    subtitle={item.updatedAt}
+    leftAvatar={{ source: { uri: item.author.avatarUrl } }}
+  />
+);
+
 const Feed: React.FC<Props> = props => (
-  <div>
-    <Button onClick={props.handleReload}>
-      <p>reload</p>
-    </Button>
-    <Button onClick={props.handleLoadNewerUpdates}>
-      <p>load recent updates</p>
-    </Button>
-    <Button onClick={props.handleLoadOlderUpdates}>
-      <p>load older updates</p>
-    </Button>
-    <Button onClick={props.handleDiscard}>
-      <p>discard</p>
-    </Button>
+  <View>
+    <Button title="reload" onPress={props.handleReload} />
+    <Button
+      title="load recent updates"
+      onPress={props.handleLoadNewerUpdates}
+    />
+    <Button title="load older updates" onPress={props.handleLoadOlderUpdates} />
+    <Button title="discard" onPress={props.handleDiscard} />
     <p>{`${props.feed.query}: ${
       props.feed.isFeatching ? 'loading' : 'done'
     }`}</p>
-    <ul>
-      {props.feed.cards.map(card => (
-        <Card key={card.id} card={card} />
-      ))}
-    </ul>
-  </div>
+    <p>{props.feed.cards.length}</p>
+    <FlatList data={props.feed.cards} renderItem={renderListItem} />
+  </View>
 );
 
 export default Feed;

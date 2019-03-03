@@ -1,4 +1,4 @@
-import { ApiError, PageInfo, SearchResult } from './GithubAPI';
+import { ApiError, PageInfo } from './GithubAPI';
 
 export interface FeedIndexByQuery {
   [query: string]: Feed;
@@ -12,7 +12,6 @@ export interface SearchQuery {
 export interface Status {
   isFeatching: boolean;
   error?: ApiError;
-  result?: SearchResult;
 }
 
 export interface Feed extends SearchQuery, Status {

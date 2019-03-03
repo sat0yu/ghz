@@ -8,6 +8,7 @@ import {
 import { Direction } from '../../state/queryBrowser/actions';
 import { RootState } from '../../state/store';
 import Feed from '../components/Feed';
+import { View } from 'react-native';
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
@@ -26,7 +27,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
     dispatch,
   );
 
-class CardBrowser extends React.Component<Props> {
+class CardBoard extends React.Component<Props> {
   public render() {
     const { feedByQuery, searchRequest, discardQuery } = this.props;
     return Object.keys(feedByQuery).map(key => {
@@ -39,14 +40,16 @@ class CardBrowser extends React.Component<Props> {
         searchRequest({ pageInfo, query, direction: Direction.AFTER });
       const handleDiscard = () => discardQuery({ query });
       return (
-        <Feed
-          key={query}
-          feed={feed}
-          handleReload={handleReload}
-          handleLoadNewerUpdates={handleLoadNewerUpdates}
-          handleLoadOlderUpdates={handleLoadOlderUpdates}
-          handleDiscard={handleDiscard}
-        />
+        <View>
+          <Feed
+            key={query}
+            feed={feed}
+            handleReload={handleReload}
+            handleLoadNewerUpdates={handleLoadNewerUpdates}
+            handleLoadOlderUpdates={handleLoadOlderUpdates}
+            handleDiscard={handleDiscard}
+          />
+        </View>
       );
     });
   }
@@ -55,4 +58,4 @@ class CardBrowser extends React.Component<Props> {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CardBrowser);
+)(CardBoard);

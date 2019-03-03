@@ -1,10 +1,9 @@
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import { default as SearchIcon } from '@material-ui/icons/Search';
+import { View } from 'react-native';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { queryBrowserOperations } from '../../state/queryBrowser';
+import { Input, Button } from 'react-native-elements';
 
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type Props = DispatchProps;
@@ -33,26 +32,21 @@ class QueryForm extends React.Component<Props, State> {
 
   public render() {
     return (
-      <form noValidate={true} autoComplete="off">
-        <TextField
+      <View>
+        <Input
           placeholder={QueryForm.defaultQuery}
-          label="Query"
           value={this.state.value}
-          onChange={this.handleOnChange}
-          margin="normal"
-          variant="outlined"
+          onChangeText={this.handleOnChange}
         />
-        <IconButton onClick={this.handleClickSearchButton}>
-          <SearchIcon />
-        </IconButton>
-      </form>
+        <Button title="search" onPress={this.handleClickSearchButton} />
+      </View>
     );
   }
 
-  private handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
-    event.preventDefault();
-    this.setState({ value: event.target.value });
+  private handleOnChange(value: string) {
+    this.setState({ value });
   }
+
   private handleClickSearchButton() {
     this.props.searchRequest({ query: this.state.value });
   }
