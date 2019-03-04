@@ -44,7 +44,7 @@
     "postcss-safe-parser": "4.0.1",
     "react": "^16.8.2",
     "react-app-polyfill": "^0.2.1",
-    "react-art": "^16.8.2",
+    "react-art": "^16.8.3",
     "react-dev-utils": "^7.0.3",
     "react-dom": "^16.8.3",
     "react-native-elements": "https://github.com/react-native-training/react-native-elements#next",
