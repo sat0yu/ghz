@@ -57,7 +57,7 @@
     "sass-loader": "7.1.0",
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "1.2.2",
-    "typescript": "^3.3.3",
+    "typescript": "^3.3.4000",
     "typescript-fsa": "^3.0.0-beta-2",
     "typescript-fsa-reducers": "^1.2.0",
     "typescript-fsa-redux-thunk": "^1.0.1",
