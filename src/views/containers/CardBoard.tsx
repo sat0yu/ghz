@@ -8,12 +8,7 @@ import {
 import { Direction } from '../../state/queryBrowser/actions';
 import { RootState } from '../../state/store';
 import Feed from '../components/Feed';
-import {
-  TabView,
-  TabContent,
-  TabList,
-  TabSelector,
-} from '../components/TabView';
+import { TabView, TabContent, TabSelector } from '../components/TabView';
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
@@ -63,11 +58,13 @@ class CardBoard extends React.Component<Props> {
 
     return (
       <TabView>
-        <TabList>
+        <ul>
           {Object.keys(tabList).map(key => (
-            <TabSelector tabId={key}>{key}</TabSelector>
+            <li key={key}>
+              <TabSelector tabId={key}>{key}</TabSelector>
+            </li>
           ))}
-        </TabList>
+        </ul>
         {Object.values(tabList)}
       </TabView>
     );

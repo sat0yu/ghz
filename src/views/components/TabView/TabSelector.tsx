@@ -1,4 +1,5 @@
 import * as React from 'react';
+import TabViewContext from './TabViewContext';
 
 interface Props {
   tabId: string;
@@ -6,6 +7,12 @@ interface Props {
 }
 
 const TabSelector: React.FC<Props> = ({ tabId, children }) => (
-  <div data-tab-id={tabId}>{children}</div>
+  <TabViewContext.Consumer>
+    {({ manager }) => (
+      <div data-tab-id={tabId} onClick={() => manager.select(tabId)}>
+        {children}
+      </div>
+    )}
+  </TabViewContext.Consumer>
 );
 export default TabSelector;
