@@ -4,24 +4,11 @@ const TabId = (tabId: string) => tabId as TabId;
 type CallbackFn = () => void;
 
 export default class ContextManager {
-  private current: TabId | undefined;
-  private tabs: Record<TabId, CallbackFn>;
-
   private get tabIds() {
     return Object.keys(this.tabs);
   }
-
-  private notifyUpdate() {
-    Object.keys(this.tabs).forEach(tabId => this.tabs[tabId]());
-  }
-
-  private include(id: TabId) {
-    return this.tabIds.includes(id);
-  }
-
-  private setCurrent(id: TabId) {
-    this.current = TabId(id);
-  }
+  private current: TabId | undefined;
+  private tabs: Record<TabId, CallbackFn>;
 
   public constructor() {
     this.current = undefined;
@@ -43,7 +30,7 @@ export default class ContextManager {
 
   public isCurrent(id: string) {
     const tabId = TabId(id);
-    return this.current == tabId;
+    return this.current === tabId;
   }
 
   public subscribe(id: string, callback: CallbackFn) {
@@ -66,5 +53,17 @@ export default class ContextManager {
       this.setCurrent(TabId(this.tabIds[0]));
       this.notifyUpdate();
     }
+  }
+
+  private notifyUpdate() {
+    Object.keys(this.tabs).forEach(tabId => this.tabs[tabId]());
+  }
+
+  private include(id: TabId) {
+    return this.tabIds.includes(id);
+  }
+
+  private setCurrent(id: TabId) {
+    this.current = TabId(id);
   }
 }
