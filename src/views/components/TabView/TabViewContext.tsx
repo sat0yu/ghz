@@ -20,6 +20,7 @@ export const withTabViewContext = <P extends ContextValue>(
       return (
         <TabViewContext.Consumer>
           {value => {
+            // tslint:disable-next-line:no-object-literal-type-assertion
             const props = { ...this.props, ...value } as P;
             return <Component {...props} />;
           }}

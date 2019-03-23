@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { TabView, TabContent, TabSelector } from '../';
 import { mount } from 'enzyme';
+import * as React from 'react';
 import { promisify } from 'util';
+import { TabContent, TabSelector, TabView } from '../';
 
 describe('TabView', () => {
   const tabIds = ['tab_a', 'tab_b'];
