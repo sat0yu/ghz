@@ -1,31 +1,12 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import {
-  queryBrowserOperations,
-  queryBrowserSelectors,
-} from '../../state/queryBrowser';
 import { Direction } from '../../state/queryBrowser/actions';
-import { RootState } from '../../state/store';
 import Feed from '../components/Feed';
+import withFeedManager, {
+  InjectedFeedManagerProps,
+} from '../composers/FeedManager';
 import { TabContent, TabSelector, TabView } from '../composers/TabView';
 
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = ReturnType<typeof mapDispatchToProps>;
-type Props = StateProps & DispatchProps;
-
-const mapStateToProps = (store: RootState) => ({
-  feedByQuery: queryBrowserSelectors.getFeedByQuery(store),
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      searchRequest: queryBrowserOperations.searchRequest,
-      discardQuery: queryBrowserOperations.discardQuery,
-    },
-    dispatch,
-  );
+type Props = InjectedFeedManagerProps;
 
 class CardBoard extends React.Component<Props> {
   public render() {
@@ -71,7 +52,4 @@ class CardBoard extends React.Component<Props> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CardBoard);
+export default withFeedManager(CardBoard);

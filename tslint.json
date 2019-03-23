@@ -8,6 +8,7 @@
   "rules": {
     "align": [true, "parameters", "statements"],
     "eofline": false,
+    "import-name": false,
     "indent": [true, "spaces"],
     "interface-name": [true, "never-prefix"],
     "jsx-no-lambda": false,
