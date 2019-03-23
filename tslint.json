@@ -4,7 +4,7 @@
     "tslint-config-airbnb",
     "tslint-config-prettier"
   ],
-  "defaultSeverity": "warning",
+  "defaultSeverity": "error",
   "rules": {
     "align": [true, "parameters", "statements"],
     "eofline": false,
