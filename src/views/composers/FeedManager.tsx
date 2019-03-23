@@ -1,41 +1,24 @@
 import * as React from 'react';
 import { connect, Omit } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import {
-  queryBrowserOperations,
-  queryBrowserSelectors,
-} from '../../state/queryBrowser';
+import { queryBrowserSelectors } from '../../state/queryBrowser';
 import { RootState } from '../../state/store';
 
-type InjectedStateProps = ReturnType<typeof mapStateToProps>;
-type InjectedDispatchProps = ReturnType<typeof mapDispatchToProps>;
-export type InjectedFeedManagerProps = InjectedStateProps &
-  InjectedDispatchProps;
+export type InjectedFeedManagerProps = ReturnType<typeof mapStateToProps>;
 
 const mapStateToProps = (store: RootState) => ({
   feedByQuery: queryBrowserSelectors.getFeedByQuery(store),
 });
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      searchRequest: queryBrowserOperations.searchRequest,
-      discardQuery: queryBrowserOperations.discardQuery,
-    },
-    dispatch,
-  );
 
 const WithFeedManager = <P extends InjectedFeedManagerProps>(
   Component: React.ComponentType<P>,
 ) => {
   type OriginalProps = Omit<P, keyof InjectedFeedManagerProps>;
   const mergeProps = (
-    stateProps: InjectedStateProps,
-    dispatchProps: InjectedDispatchProps,
+    stateProps: InjectedFeedManagerProps,
+    _dispatchProps: undefined,
     ownProps: OriginalProps,
   ) => ({
     ...stateProps,
-    ...dispatchProps,
     ...ownProps,
   });
 
@@ -47,7 +30,7 @@ const WithFeedManager = <P extends InjectedFeedManagerProps>(
 
   return connect(
     mapStateToProps,
-    mapDispatchToProps,
+    undefined,
     mergeProps,
   )(WrappedComponent);
 };

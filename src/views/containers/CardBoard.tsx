@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import { queryBrowserOperations } from '../../state/queryBrowser';
 import { Direction } from '../../state/queryBrowser/actions';
 import Feed from '../components/Feed';
 import withFeedManager, {
@@ -6,7 +9,17 @@ import withFeedManager, {
 } from '../composers/FeedManager';
 import { TabContent, TabSelector, TabView } from '../composers/TabView';
 
-type Props = InjectedFeedManagerProps;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+type Props = InjectedFeedManagerProps & DispatchProps;
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      searchRequest: queryBrowserOperations.searchRequest,
+      discardQuery: queryBrowserOperations.discardQuery,
+    },
+    dispatch,
+  );
 
 class CardBoard extends React.Component<Props> {
   public render() {
@@ -52,4 +65,7 @@ class CardBoard extends React.Component<Props> {
   }
 }
 
-export default withFeedManager(CardBoard);
+export default connect(
+  undefined,
+  mapDispatchToProps,
+)(withFeedManager(CardBoard));
