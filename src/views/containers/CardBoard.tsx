@@ -8,7 +8,7 @@ import {
 import { Direction } from '../../state/queryBrowser/actions';
 import { RootState } from '../../state/store';
 import Feed from '../components/Feed';
-import { TabView, TabContent, TabSelector } from '../components/TabView';
+import { TabContent, TabSelector, TabView } from '../components/TabView';
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
