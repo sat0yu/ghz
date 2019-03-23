@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { withTabViewContext, ContextValue } from './TabViewContext';
+import { ContextValue, withTabViewContext } from './TabViewContext';
 
 interface OwnProps {
   tabId: string;
@@ -9,10 +9,6 @@ interface OwnProps {
 type Props = OwnProps & ContextValue;
 
 class TabContent extends React.Component<Props> {
-  private update() {
-    this.forceUpdate();
-  }
-
   public constructor(props: Props) {
     super(props);
     this.update = this.update.bind(this);
@@ -33,6 +29,9 @@ class TabContent extends React.Component<Props> {
     return manager.isCurrent(tabId) ? (
       <div data-tab-id={tabId}>{children}</div>
     ) : null;
+  }
+  private update() {
+    this.forceUpdate();
   }
 }
 

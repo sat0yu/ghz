@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TabViewContext, { ContextValue, contextFactory } from './TabViewContext';
+import TabViewContext, { contextFactory, ContextValue } from './TabViewContext';
 
 interface Props {
   children: React.ReactNode;
