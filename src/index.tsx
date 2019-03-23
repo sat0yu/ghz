@@ -1,6 +1,6 @@
+import { AppRegistry } from 'react-native';
 import registerServiceWorker from './registerServiceWorker';
 import App from './views/App';
-import { AppRegistry } from 'react-native';
 
 import './index.css';
 

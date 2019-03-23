@@ -1,9 +1,9 @@
-import { View } from 'react-native';
 import * as React from 'react';
+import { View } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { queryBrowserOperations } from '../../state/queryBrowser';
-import { Input, Button } from 'react-native-elements';
 
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type Props = DispatchProps;

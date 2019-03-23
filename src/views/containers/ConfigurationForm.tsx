@@ -1,6 +1,6 @@
-import { View } from 'react-native';
 import * as React from 'react';
-import { Input, Button } from 'react-native-elements';
+import { View } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import { Auth } from '../../helpers/Auth';
 
 const ConfigurationForm: React.FC = () => {

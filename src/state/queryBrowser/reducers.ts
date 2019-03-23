@@ -1,4 +1,4 @@
-import { isUndefined, uniqBy, omit } from 'lodash-es';
+import { isUndefined, omit, uniqBy } from 'lodash-es';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { Feed } from '../../interfaces/card';
 import { Direction, discardQuery, search } from './actions';

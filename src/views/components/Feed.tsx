@@ -1,10 +1,10 @@
-import { View, FlatList, ListRenderItem } from 'react-native';
 import * as React from 'react';
-import {
-  Feed as FeedInterface,
-  Card as CardInterface,
-} from '../../interfaces/card';
+import { FlatList, ListRenderItem, View } from 'react-native';
 import { Button, ListItem } from 'react-native-elements';
+import {
+  Card as CardInterface,
+  Feed as FeedInterface,
+} from '../../interfaces/card';
 
 interface Props {
   feed: FeedInterface;
