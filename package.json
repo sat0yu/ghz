@@ -46,7 +46,7 @@
     "react-app-polyfill": "^0.2.1",
     "react-art": "^16.8.4",
     "react-dev-utils": "^7.0.3",
-    "react-dom": "^16.8.4",
+    "react-dom": "^16.8.5",
     "react-native-elements": "https://github.com/react-native-training/react-native-elements#next",
     "react-native-vector-icons": "^6.3.0",
     "react-native-web": "^0.10.0",
