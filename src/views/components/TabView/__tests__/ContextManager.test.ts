@@ -30,12 +30,17 @@ describe('ContextManager', () => {
 
     it('does nothing when given an existing tab', () => {
       subject.subscribe(initialTabId, initialTabCb);
+      // when adding the first tab,
+      // the subscribe method invokes the registered callback
+      initialTabCb.mockClear();
+      // check the current tab list
       expect(subject.getTabs()).toEqual({ [initialTabId]: initialTabCb });
+      // subscribe the tab again
       subject.subscribe(initialTabId, initialTabCb);
+      // confirm that the tab list does not change
       expect(subject.getTabs()).toEqual({ [initialTabId]: initialTabCb });
-
+      // check if the callback is not called
       expect(initialTabCb).not.toBeCalled();
-      expect(anotherTabCb).not.toBeCalled();
     });
   });
 
@@ -96,6 +101,9 @@ describe('ContextManager', () => {
 
     it('does nothing when given the same tab ID', () => {
       subject.select(initialTabId);
+      // when adding the first tab,
+      // the subscribe method invokes the registered callback
+      initialTabCb.mockClear();
       expect(subject.isCurrent(initialTabId)).toEqual(true);
       expect(subject.isCurrent(anotherTabId)).toEqual(false);
       expect(initialTabCb).not.toBeCalled();

@@ -55,6 +55,7 @@ export default class ContextManager {
     // Set the first tab as the current one
     if (!this.current) {
       this.setCurrent(tabId);
+      this.notifyUpdate();
     }
   }
 
