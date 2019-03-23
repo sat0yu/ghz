@@ -3,9 +3,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { Feed } from '../../interfaces/card';
 import { Direction, discardQuery, search } from './actions';
 
-interface QueryBrowserState {
-  [query: string]: Feed;
-}
+type QueryBrowserState = Record<string, Feed>;
 
 export const initialState = {};
 
