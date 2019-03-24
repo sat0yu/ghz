@@ -8,6 +8,7 @@ export interface SearchQuery {
 }
 
 export interface Status {
+  isActive: boolean;
   isFeatching: boolean;
   error?: ApiError;
 }

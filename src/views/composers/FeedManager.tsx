@@ -5,6 +5,7 @@ import {
   queryBrowserOperations,
   queryBrowserSelectors,
 } from '../../state/queryBrowser';
+import { Direction } from '../../state/queryBrowser/actions';
 import { RootState } from '../../state/store';
 
 type InjectedStateProps = ReturnType<typeof mapStateToProps>;
@@ -69,8 +70,11 @@ const WithFeedManager = <P extends InjectedFeedManagerProps>(
       const { feedByQuery, searchRequest } = this.props;
       Object.keys(feedByQuery).forEach(key => {
         const feed = feedByQuery[key];
-        const { pageInfo, query } = feed;
-        searchRequest({ pageInfo, query });
+        const { pageInfo, query, isActive = false } = feed;
+        // insert the fetched result for the active feed
+        isActive
+          ? searchRequest({ pageInfo, query, direction: Direction.BEFORE })
+          : searchRequest({ pageInfo, query });
       });
     }
   }
