@@ -15,7 +15,6 @@ type Props = InjectedFeedManagerProps & DispatchProps;
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      searchRequest: queryBrowserOperations.searchRequest,
       discardQuery: queryBrowserOperations.discardQuery,
     },
     dispatch,
