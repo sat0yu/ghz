@@ -22,20 +22,32 @@ const renderListItem: ListRenderItem<CardInterface> = ({ item }) => (
   />
 );
 
-const Feed: React.FC<Props> = props => (
+const Feed: React.FC<Props> = ({
+  feed,
+  handleReload,
+  handleLoadNewerUpdates,
+  handleLoadOlderUpdates,
+  handleDiscard,
+}) => (
   <View>
-    <Button title="reload" onPress={props.handleReload} />
+    <Button title="reload" onPress={handleReload} disabled={feed.isFeatching} />
     <Button
       title="load recent updates"
-      onPress={props.handleLoadNewerUpdates}
+      onPress={handleLoadNewerUpdates}
+      disabled={feed.isFeatching}
     />
-    <Button title="load older updates" onPress={props.handleLoadOlderUpdates} />
-    <Button title="discard" onPress={props.handleDiscard} />
-    <p>{`${props.feed.query}: ${
-      props.feed.isFeatching ? 'loading' : 'done'
-    }`}</p>
-    <p>{props.feed.cards.length}</p>
-    <FlatList data={props.feed.cards} renderItem={renderListItem} />
+    <Button
+      title="load older updates"
+      onPress={handleLoadOlderUpdates}
+      disabled={feed.isFeatching}
+    />
+    <Button
+      title="discard"
+      onPress={handleDiscard}
+      disabled={feed.isFeatching}
+    />
+    <p>{feed.cards.length}</p>
+    <FlatList data={feed.cards} renderItem={renderListItem} />
   </View>
 );
 

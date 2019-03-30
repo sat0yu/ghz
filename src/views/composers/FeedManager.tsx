@@ -70,7 +70,11 @@ const WithFeedManager = <P extends InjectedFeedManagerProps>(
       const { feedByQuery, searchRequest } = this.props;
       Object.keys(feedByQuery).forEach(key => {
         const feed = feedByQuery[key];
-        const { pageInfo, query, isActive = false } = feed;
+        const { pageInfo, query, isFeatching, isActive = false } = feed;
+        if (isFeatching) {
+          // do not nothing when the feed is loadng
+          return;
+        }
         // insert the fetched result for the active feed
         isActive
           ? searchRequest({ pageInfo, query, direction: Direction.BEFORE })
