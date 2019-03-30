@@ -17,16 +17,27 @@ export enum Direction {
   AFTER = 'AFTER',
 }
 
-const buildSearchQuery = ({ query, pageInfo, direction }: SearchParams) => {
+export const isFetchBeforeRequest = (
+  params: SearchParams,
+): params is SearchParams & { direction: Direction } =>
+  params.direction === Direction.BEFORE;
+
+export const isFetchAfterRequest = (
+  params: SearchParams,
+): params is SearchParams & { direction: Direction } =>
+  params.direction === Direction.AFTER;
+
+const buildSearchQuery = (params: SearchParams) => {
+  const { query, pageInfo, direction } = params;
   const RESULT_PER_PAGE = 50;
   const safeQuery = query.replace(/"/g, '\\"');
   const base = `query: "${safeQuery}", type: ISSUE`;
   const option =
     isUndefined(pageInfo) || isUndefined(direction)
       ? `${base}, first: ${RESULT_PER_PAGE}`
-      : direction === Direction.BEFORE && pageInfo.hasPreviousPage
+      : isFetchBeforeRequest(params) && pageInfo.hasPreviousPage
       ? `${base}, before: "${pageInfo.startCursor}", last: ${RESULT_PER_PAGE}`
-      : direction === Direction.AFTER && pageInfo.hasNextPage
+      : isFetchAfterRequest(params) && pageInfo.hasNextPage
       ? `${base}, after: "${pageInfo.endCursor}", first: ${RESULT_PER_PAGE}`
       : // this line is just for a fallback, basically never reach here
         `${base}, first: ${RESULT_PER_PAGE}`;
@@ -96,7 +107,16 @@ export const discardQuery = actionCreator<DiscardQueryParams>(
   types.DIDCARD_QUERY,
 );
 
+interface SetActivateQueryParams {
+  query: string;
+}
+
+export const setActiveQuery = actionCreator<SetActivateQueryParams>(
+  types.SET_ACTIVE_QUERY,
+);
+
 export default {
   searchRequest,
   discardQuery,
+  setActiveQuery,
 };

@@ -1,8 +1,6 @@
 import { ApiError, PageInfo } from './GithubAPI';
 
-export interface FeedIndexByQuery {
-  [query: string]: Feed;
-}
+export type FeedIndexByQuery = Record<string, Feed>;
 
 export interface SearchQuery {
   pageInfo?: PageInfo;
@@ -10,6 +8,7 @@ export interface SearchQuery {
 }
 
 export interface Status {
+  isActive: boolean;
   isFeatching: boolean;
   error?: ApiError;
 }
@@ -18,9 +17,7 @@ export interface Feed extends SearchQuery, Status {
   cards: Card[];
 }
 
-export interface CardsIndexByQuery {
-  [query: string]: Card[];
-}
+export type CardsIndexByQuery = Record<string, Card[]>;
 
 export interface Card {
   author: Actor;

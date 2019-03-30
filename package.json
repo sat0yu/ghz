@@ -72,7 +72,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "tslint": "tslint --project tsconfig.json",
-    "tslint:fix": "tslint --fix --project tsconfig.json"
+    "tslint:fix": "tslint --fix --project tsconfig.json",
+    "typecheck": "tsc --noEmit"
   },
   "eslintConfig": {
     "extends": "react-app"
