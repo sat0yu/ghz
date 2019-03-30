@@ -28,27 +28,32 @@ const Feed: React.FC<Props> = ({
   handleLoadNewerUpdates,
   handleLoadOlderUpdates,
   handleDiscard,
-}) => (
-  <View>
-    <Button title="reload" onPress={handleReload} disabled={feed.isFeatching} />
-    <Button
-      title="load recent updates"
-      onPress={handleLoadNewerUpdates}
-      disabled={feed.isFeatching}
-    />
-    <Button
-      title="load older updates"
-      onPress={handleLoadOlderUpdates}
-      disabled={feed.isFeatching}
-    />
-    <Button
-      title="discard"
-      onPress={handleDiscard}
-      disabled={feed.isFeatching}
-    />
-    <p>{feed.cards.length}</p>
-    <FlatList data={feed.cards} renderItem={renderListItem} />
-  </View>
-);
+}) =>
+  feed.isActive ? (
+    <View>
+      <Button
+        title="reload"
+        onPress={handleReload}
+        disabled={feed.isFeatching}
+      />
+      <Button
+        title="load recent updates"
+        onPress={handleLoadNewerUpdates}
+        disabled={feed.isFeatching}
+      />
+      <Button
+        title="load older updates"
+        onPress={handleLoadOlderUpdates}
+        disabled={feed.isFeatching}
+      />
+      <Button
+        title="discard"
+        onPress={handleDiscard}
+        disabled={feed.isFeatching}
+      />
+      <p>{feed.cards.length}</p>
+      <FlatList data={feed.cards} renderItem={renderListItem} />
+    </View>
+  ) : null;
 
 export default Feed;

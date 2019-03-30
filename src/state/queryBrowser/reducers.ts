@@ -6,6 +6,7 @@ import {
   isFetchAfterRequest,
   isFetchBeforeRequest,
   search,
+  setActiveQuery,
 } from './actions';
 
 type QueryBrowserState = Record<string, Feed>;
@@ -96,4 +97,16 @@ export const reducers = reducerWithInitialState<QueryBrowserState>(initialState)
       },
     };
   })
-  .case(discardQuery, (state, payload) => omit(state, payload.query));
+  .case(discardQuery, (state, payload) => omit(state, payload.query))
+  .case(setActiveQuery, (state, payload) =>
+    Object.keys(state).reduce(
+      (acc, query) => ({
+        ...acc,
+        [query]: {
+          ...state[query],
+          isActive: query === payload.query,
+        },
+      }),
+      {},
+    ),
+  );

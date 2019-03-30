@@ -12,6 +12,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       searchRequest: queryBrowserOperations.searchRequest,
+      setActiveQuery: queryBrowserOperations.setActiveQuery,
     },
     dispatch,
   );
@@ -48,7 +49,10 @@ class QueryForm extends React.Component<Props, State> {
   }
 
   private handleClickSearchButton() {
-    this.props.searchRequest({ query: this.state.value });
+    const { searchRequest, setActiveQuery } = this.props;
+    const { value: query } = this.state;
+    searchRequest({ query });
+    setActiveQuery({ query });
   }
 }
 

@@ -7,7 +7,6 @@ import Feed from '../components/Feed';
 import withFeedManager, {
   InjectedFeedManagerProps,
 } from '../composers/FeedManager';
-import { TabContent, TabSelector, TabView } from '../composers/TabView';
 
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 type Props = InjectedFeedManagerProps & DispatchProps;
@@ -16,13 +15,19 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       discardQuery: queryBrowserOperations.discardQuery,
+      setActiveQuery: queryBrowserOperations.setActiveQuery,
     },
     dispatch,
   );
 
 class CardBoard extends React.Component<Props> {
   public render() {
-    const { feedByQuery, searchRequest, discardQuery } = this.props;
+    const {
+      feedByQuery,
+      searchRequest,
+      discardQuery,
+      setActiveQuery,
+    } = this.props;
     const tabList = Object.keys(feedByQuery).reduce((acc, key) => {
       const feed = feedByQuery[key];
       const { pageInfo, query } = feed;
@@ -35,31 +40,31 @@ class CardBoard extends React.Component<Props> {
       return {
         ...acc,
         [key]: (
-          <TabContent key={key} tabId={key}>
-            <Feed
-              key={query}
-              feed={feed}
-              handleReload={handleReload}
-              handleLoadNewerUpdates={handleLoadNewerUpdates}
-              handleLoadOlderUpdates={handleLoadOlderUpdates}
-              handleDiscard={handleDiscard}
-            />
-          </TabContent>
+          <Feed
+            key={query}
+            feed={feed}
+            handleReload={handleReload}
+            handleLoadNewerUpdates={handleLoadNewerUpdates}
+            handleLoadOlderUpdates={handleLoadOlderUpdates}
+            handleDiscard={handleDiscard}
+          />
         ),
       };
     }, {});
+    const tabSelectorList = Object.values(feedByQuery).map(feed => (
+      <li
+        key={feed.query}
+        onClick={() => setActiveQuery({ query: feed.query })}
+      >
+        {feed.isActive ? `** ${feed.query} **` : feed.query}
+      </li>
+    ));
 
     return (
-      <TabView>
-        <ul>
-          {Object.keys(tabList).map(key => (
-            <li key={key}>
-              <TabSelector tabId={key}>{key}</TabSelector>
-            </li>
-          ))}
-        </ul>
+      <>
+        <ul>{tabSelectorList}</ul>
         {Object.values(tabList)}
-      </TabView>
+      </>
     );
   }
 }

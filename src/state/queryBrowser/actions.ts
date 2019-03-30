@@ -107,7 +107,16 @@ export const discardQuery = actionCreator<DiscardQueryParams>(
   types.DIDCARD_QUERY,
 );
 
+interface SetActivateQueryParams {
+  query: string;
+}
+
+export const setActiveQuery = actionCreator<SetActivateQueryParams>(
+  types.SET_ACTIVE_QUERY,
+);
+
 export default {
   searchRequest,
   discardQuery,
+  setActiveQuery,
 };
